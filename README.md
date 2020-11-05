@@ -5,14 +5,20 @@ Gateway for connecting GW60 superrollo shutters with ZB40 remote control unit wi
 For this to work you need to disable a remote and connect the ESP to the HCS361 KeeLoq chip (some soldering skills required)
 This will definitely void your warranty, do it at your own risk!
 
+This is a fork of https://github.com/thexperiments/esp8266_zb40_mqtt_gateway
+
+I changed it, to stop the GW60 from moving while booting and to be able to use the remote manually, too.
+
 Connections:
 
 GPIO(arduino)|nodeMcu|HCS631
 -------------|-------|------
-16|D0|1(S0)
+16|D5|1(S0)
 5|D1|2(S1)
 4|D2|3(S2)
-15|D8|4(S3)
+15|D6|4(S3)
+
+For reset, set 13|D7 to ground.
 
 The ESP will come up in AP mode for configuration with SSID ZB40_Gateway encryption is enabled. (Password: roottoor)
 
