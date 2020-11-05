@@ -16,22 +16,23 @@ char mqtt_server[40];
 char mqtt_port[6] = "1883";
 char mqtt_user[20] = "";
 char mqtt_password[20] = "";
-char mqtt_topic[50] = "/ZB40_GATEWAY";
+char mqtt_topic[50] = "/ZB40_GATEWAY2";
 
 
-const char* device_name = "ZB40_GATEWAY";
+const char* device_name = "ZB40_GATEWAY2";
 
-const char* config_ssid = "ZB40_Gateway";
+const char* config_ssid = "ZB40_GATEWAY2";
 const char* config_password = "roottoor";
 
 //flag for saving data
 bool shouldSaveConfig = false;
 
-const int RESET_PIN = 14; //D5 on nodeMCU
+const int RESET_PIN = 13; //D7 on nodeMCU
 
 //ZB40 config
 // pinmapping HCS361 keeloq chip<->ESP node mcu (0,1,2,3)
-const int HCS361_PINS[] = {16,5,4,15};
+//const int HCS361_PINS[] = {16,5,4,15};  // Entspricht D0 D1 D2 D8
+const int HCS361_PINS[] = {14,5,4,12};  // Entspricht D5 D1 D2 D6 
 const int CMD_UP = 1;
 const int CMD_DOWN = 2;
 const int CMD_STOP = 3;
@@ -64,8 +65,9 @@ void setup() {
   Serial.println("GPIO setup...");
   for (int i = 0; i < 4; i++){
     int current_pin = HCS361_PINS[i];
-    digitalWrite(current_pin, LOW);
     pinMode(current_pin, OUTPUT);
+    digitalWrite(current_pin, LOW);
+    pinMode(current_pin, INPUT);
   }
 
   pinMode(RESET_PIN, INPUT_PULLUP);
@@ -277,7 +279,7 @@ void mqtt_reconnect() {
     if (mqtt_connect()) {
       Serial.println("connected");
       // Once connected, publish an announcement...
-      client.publish(mqtt_topic, "ZB40_GATEWAY online");
+      client.publish(mqtt_topic, "ZB40_GATEWAY2 online");
       // ... and resubscribe
       char generated_topic[60];
       sprintf(generated_topic, "%s/#", mqtt_topic);
@@ -304,6 +306,11 @@ void send_ZB40_command(int shutter, int command){
   HCS361_bits[1] = command >> 1 & 0x01;
   HCS361_bits[0] = command & 0x01;
 
+  for (int i = 0; i < 4; i++){
+    int current_pin = HCS361_PINS[i];
+    pinMode(current_pin, OUTPUT);    
+  }
+
   Serial.print("Sending... [");
   //set the outputs accordingly
   for (int i = 0; i < 4; i++){
@@ -311,11 +318,15 @@ void send_ZB40_command(int shutter, int command){
     Serial.print(HCS361_bits[i]);
   }
   Serial.println("]");
-  //wait 500ms 
-  delay(500);
+  //wait 1000ms 
+  delay(1000);
   //and set them back to 0
   for (int i = 0; i < 4; i++){
-    digitalWrite(HCS361_PINS[i], LOW);
+    digitalWrite(HCS361_PINS[i], LOW);    
+  }
+  for (int i = 0; i < 4; i++){
+    int current_pin = HCS361_PINS[i];
+    pinMode(current_pin, INPUT);    
   }
 }
 
