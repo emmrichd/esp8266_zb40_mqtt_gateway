@@ -8,6 +8,7 @@ This will definitely void your warranty, do it at your own risk!
 This is a fork of https://github.com/thexperiments/esp8266_zb40_mqtt_gateway
 
 I changed it, to stop the GW60 from moving while booting and to be able to use the remote manually, too.
+(Some pins of the original version are set to "high" while booting, at least for NodeMCU Lolin V3)
 
 Connections:
 
