@@ -13,10 +13,10 @@ Connections:
 
 GPIO(arduino)|nodeMcu|HCS631
 -------------|-------|------
-16|D5|1(S0)
+14|D5|1(S0)
 5|D1|2(S1)
 4|D2|3(S2)
-15|D6|4(S3)
+12|D6|4(S3)
 
 For reset, set 13|D7 to ground.
 
